@@ -1,0 +1,49 @@
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
+*.zip
+
+pids
+logs
+results
+tmp
+Dockerfile
+
+.git
+.gitignore
+.dockerignore
+docker-compose*
+
+# Build
+public/css/main.css
+
+# Coverage reports
+coverage
+
+# API keys and secrets
+.env
+
+.nuxt
+
+# Dependency directory
+node_modules
+bower_components
+
+dist
+
+# Editors
+.idea
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# ignore yarn.lock
+yarn.lock

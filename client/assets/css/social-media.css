@@ -1,0 +1,171 @@
+.wrapper .button {
+  display: inline-block;
+  height: 60px;
+  width: 60px;
+  text-align: center;
+  margin: 0 5px;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 60px;
+  border-style: solid;
+  border-color: #2e86c1;
+  cursor: pointer;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-out;
+}
+.wrapper .button:hover {
+  width: 260px;
+}
+.wrapper .button .icon {
+  display: inline-block;
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  border-radius: 35px;
+  box-sizing: border-box;
+  line-height: 30px;
+  transition: all 0.3s ease-out;
+}
+.wrapper .button:nth-child(1):hover .icon {
+  background: white;
+}
+.wrapper .button:nth-child(2):hover .icon {
+  background: white;
+}
+.wrapper .button:nth-child(3):hover .icon {
+  background: white;
+}
+.wrapper .button:nth-child(4):hover .icon {
+  background: white;
+}
+
+.wrapper .button .icon i {
+  font-size: 25px;
+  line-height: 60px;
+  transition: all 0.3s ease-out;
+}
+.wrapper .button:hover .icon i {
+  color: #fff;
+}
+.wrapper .button span {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 30px;
+  margin-left: 5px;
+  transition: all 0.3s ease-out;
+}
+
+.wrapper .button:nth-child(1) span {
+  color: black;
+}
+.wrapper .button:nth-child(2) span {
+  color: #0077b5;
+}
+.wrapper .button:nth-child(3) span {
+  color: #1da1f2;
+}
+.wrapper .button:nth-child(4) span {
+  color: #3b5998;
+}
+
+.google-logo {
+  width: 50%;
+  margin: 10px 13px;
+}
+
+.linkedin-logo {
+  width: 100%;
+  margin: 10px 0px;
+}
+
+.twitter-logo {
+  width: 55%;
+  margin: 12px 13px;
+}
+
+.facebook-logo {
+  width: 70%;
+  margin: 10px 8px;
+}
+
+.soical-media-logo a {
+  text-decoration: none;
+}
+
+#orsection p {
+  font-family: Bahnschrift;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #7b7d7d;
+}
+
+@media only screen and (max-width: 700px) {
+  .wrapper .button {
+    display: inline-block;
+    height: 45px;
+    width: 45px;
+    text-align: center;
+    margin: 0 5px;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 45px;
+    border-style: solid;
+    border-color: #2e86c1;
+    cursor: pointer;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-out;
+  }
+  .wrapper .button:hover {
+    width: 200px;
+  }
+  .wrapper .button .icon {
+    display: inline-block;
+    height: 45px;
+    width: 45px;
+    text-align: center;
+    border-radius: 30px;
+    box-sizing: border-box;
+    line-height: 25px;
+    transition: all 0.3s ease-out;
+  }
+
+  .wrapper .button .icon i {
+    font-size: 15px;
+    line-height: 10px;
+    transition: all 0.3s ease-out;
+  }
+
+  .wrapper .button span {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 25px;
+
+    transition: all 0.3s ease-out;
+  }
+
+  .google-logo {
+    width: 45%;
+    margin: 4px 10px;
+  }
+
+  .linkedin-logo {
+    width: 88%;
+    margin: 4px 0px;
+  }
+
+  .twitter-logo {
+    width: 50%;
+    margin: 5px 10px;
+  }
+
+  .facebook-logo {
+    width: 50%;
+    margin: 4px 9px;
+  }
+
+  #orsection p {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    color: #7b7d7d;
+  }
+}
