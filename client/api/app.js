@@ -23,6 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const { createServer } = require("http");
 const compression_1 = __importDefault(require("compression"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
@@ -31,7 +32,7 @@ const bluebird_1 = __importDefault(require("bluebird"));
 const socketIo = __importStar(require("socket.io"));
 const cron_1 = require("cron");
 const secrets_1 = require("./util/secrets");
-const api_1 = __importDefault(require("./routes/api"));
+// const api_1 = __importDefault(require("./routes/api"));
 const middlewares_1 = __importDefault(require("./middlewares"));
 const user_1 = __importDefault(require("./controllers/user"));
 const snacksbox = __importStar(require("./controllers/snacksbox"));
@@ -41,8 +42,18 @@ const contact_1 = __importDefault(require("./controllers/api/contact"));
 const hourly_workspace_capacity_check_1 = __importDefault(require("./cronjobs/hourly-workspace-capacity-check"));
 const monthly_subscription_check_1 = __importDefault(require("./cronjobs/monthly-subscription-check"));
 const snacksbox_seed_1 = __importDefault(require("./seed/snacksbox-seed"));
+const component = __importStar(require("./controllers/api/component"));
+const widget = __importStar(require("./controllers/api/widget"));
+const workspace_1 = __importDefault(require("./controllers/api/workspace"));
+const payment_1 = __importDefault(require("./controllers/api/payment"));
+const subscription_1 = __importDefault(require("./controllers/api/subscription"));
+const plan_1 = __importDefault(require("./controllers/api/plan"));
+// API keys and Passport configuration
+const registryController = __importStar(require("./controllers/api/registry"));
+
 // Create Express server
 const app = express_1.default();
+const server = createServer(app);
 const job = new cron_1.CronJob("1 0 0-23 * * *", hourly_workspace_capacity_check_1.default);
 job.start();
 console.log("cron job started");
@@ -61,19 +72,14 @@ app.set("view engine", "ejs");
 // Express configuration
 app.set("port", process.env.PORT || 3000);
 app.use(cors_1.default({ origin: "*", credentials: true }));
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
 app.use(compression_1.default());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use(middlewares_1.default.jsonSyntax);
-const server = app.listen(app.get("port"), () => {
-    console.log("  App is running at http://localhost:%d in %s mode", app.get("port"), app.get("env"));
-    console.log("  Press CTRL-C to stop\n");
-});
+// const server = app.listen(app.get("port"), () => {
+//     console.log("  App is running at http://localhost:%d in %s mode", app.get("port"), app.get("env"));
+//     console.log("  Press CTRL-C to stop\n");
+// });
 const io = socketIo.listen(server, { origins: "*:*" });
 app.use((req, res, next) => {
     req.io = io;
@@ -84,9 +90,9 @@ snacksbox_seed_1.default.seedingSnacksboxProduct();
 /**
  * Primary app routes.
  */
-app.get("/api", (req, res) => {
-    res.json({ "success": true, "databse": mongoose_1.default.connection.readyState });
-});
+// app.get("/", (req, res) => {
+//     res.json({ "success": true, "databse": mongoose_1.default.connection.readyState });
+// });
 app.post("/api/signup", user_1.default.validate("signup"), user_1.default.signup);
 app.post("/api/login", user_1.default.validate("login"), user_1.default.login);
 app.post("/api/invite-friend", user_1.default.validate("forget"), user_1.default.inviteFriend);
@@ -114,7 +120,36 @@ app.post("/api/contact", contact_1.default.contactUs);
 /**
  * API examples routes.
  */
-app.use("/api", middlewares_1.default.auth, api_1.default);
+// app.use("/api", middlewares_1.default.auth, api_1.default);
+
+app.get("/api/components", component.getComponents);
+app.get("/api/components/self", component.getSelfComponents);
+app.post("/api/components", component.postComponent);
+app.put("/api/components/:id", component.putComponent);
+app.put("/api/components/:id/active", component.activeComponent);
+app.delete("/api/components/:id", component.deleteComponent);
+app.post("/api/components/:id/add-actions", component.addActions);
+app.post("/api/components/:id/add-triggets", component.addTriggers);
+app.get("/api/registries", registryController.getRegistries);
+app.post("/api/registries", registryController.addRegistry);
+app.put("/api/registries/:id", registryController.updateRegistry);
+app.delete("/api/registries/:id", registryController.deleteRegistry);
+app.post("/api/registries/action", registryController.postAction);
+app.get("/api/registries/trigger", registryController.getTrigger);
+app.get("/api/widgets", widget.getWidgets);
+app.post("/api/widgets", widget.storeWidget);
+app.delete("/api/widgets/:id", widget.destroyWidget);
+app.get("/api/workspace/my-workspaces", workspace_1.default.myWorkspaces);
+app.get("/api/workspace/members", workspace_1.default.getMembers);
+app.get("/api/workspace/transactions", workspace_1.default.getTransactions);
+app.post("/api/workspace", workspace_1.default.createWorkspace);
+app.post("/api/deposit", payment_1.default.deposit);
+app.post("/api/webhook/payment", payment_1.default.webhook);
+app.post("/api/subscription", subscription_1.default.createSubscription);
+app.get("/api/subscription", subscription_1.default.getSubscriptions);
+app.post("/api/plan", plan_1.default.createPlan);
+app.get("/api/plan", plan_1.default.getPlans);
+app.post("/api/snacksbox/verify", snacksbox.verifySnackBox);
 /**
  * OAuth authentication routes. (Sign in)
  */
@@ -128,5 +163,13 @@ app.post("/api/auth/signup/google", user_1.default.authenticateGoogle);
 // app.delete("/delete-user", userController.deleteUserFromWorkspace);
 // Handling any unexpected errors
 app.use(error_response_1.default);
-exports.default = app;
+
+// module.exports = {
+//   path: '/api',
+//   handler: app
+// }
 //# sourceMappingURL=app.js.map
+module.exports = {
+  app,
+  server
+}
