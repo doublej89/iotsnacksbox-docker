@@ -235,7 +235,7 @@ export default {
       // Required
       {
         // url: 'https://api.iotsnacksbox.io',
-        url: 'http://52.45.109.87:5000/socket.io',
+        url: 'http://52.45.109.87:5000',
       },
     ],
   },
