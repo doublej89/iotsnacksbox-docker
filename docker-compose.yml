@@ -1,21 +1,21 @@
 version: "3.3"
 services:
-  # nginx:
-  #   depends_on:
-  #     - client
-  #     - api
-  #   restart: always # because it is routing traffic to our entire app
-  #   build:
-  #     dockerfile: Dockerfile
-  #     context: ./nginx
-  #   ports:
-  #     - '80:80'
+  nginx:
+    depends_on:
+      - client
+      - api
+    restart: always # because it is routing traffic to our entire app
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - '80:80'
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
     ports: 
-      - "80:4200"
+      - "4200:4200"
     container_name: client
     depends_on:
       - api
