@@ -112,8 +112,8 @@ export default {
    */
   axios: {
     // baseURL: 'https://api.iotsnacksbox.io',
-    // baseURL: 'http://52.45.109.87:5000/api',
-    baseURL: 'http://localhost:5000/api',
+    baseURL: 'http://52.45.109.87:5000/api',
+    // baseURL: 'http://localhost:5000/api',
     // baseURL: 'https://api.iotsnacksbox.io/',
   },
   /*
@@ -236,8 +236,8 @@ export default {
       // Required
       {
         // url: 'https://api.iotsnacksbox.io',
-        // url: 'http://52.45.109.87:5000',
-        url: 'http://localhost:5000',
+        url: 'http://52.45.109.87:5000',
+        // url: 'http://localhost:5000',
       },
     ],
   },
