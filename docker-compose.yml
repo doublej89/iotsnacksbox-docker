@@ -8,8 +8,12 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./nginx
+    expose:
+      - "80"
+      - "443"
     ports:
-      - '80:80'
+      - "80:80"
+      - "443:443"
   client:
     build:
       context: ./client
