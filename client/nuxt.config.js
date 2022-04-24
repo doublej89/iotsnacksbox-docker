@@ -111,8 +111,8 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    // baseURL: 'https://api.iotsnacksbox.io',
-    baseURL: 'https://52.45.109.87:5000/api',
+    // baseURL: 'https://52.45.109.87:5000/api',
+    baseURL: 'https://iotsnacksbox.io/api',
     // baseURL: 'http://localhost:5000/api',
     // baseURL: 'https://api.iotsnacksbox.io/',
   },
@@ -236,7 +236,8 @@ export default {
       // Required
       {
         // url: 'https://api.iotsnacksbox.io',
-        url: 'https://52.45.109.87:5000',
+        // url: 'https://52.45.109.87:5000',
+        url: 'https://iotsnacksbox.io',
         // url: 'http://localhost:5000',
       },
     ],
