@@ -12,12 +12,14 @@ export default async function ({ app }) {
     const url = `/auth/signup/${authStrategy}?token=${token}`
     try {
       const data = await app.$axios.$post(url, null)
+      console.log(data)
       auth.reset()
       auth.setStrategy('local')
       auth.setUserToken(data.access_token, data.refresh_token)
       auth.setUser(data.user)
-      if (!data.user.workspace) {
-        app.$router.push({
+      if (authStrategy !== 'github' && !data.user.workspace) {
+        // console.log('should redirect to workspace page')
+        app.router.push({
           path: '/dashboard/workspace',
         })
       }

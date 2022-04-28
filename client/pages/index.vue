@@ -44,6 +44,11 @@ export default {
   computed: {},
   created() {},
   methods: {},
+  fetch({ redirect, $auth }) {
+    if ($auth.loggedIn && !$auth.user.workspace) {
+      redirect('/dashboard/workspace')
+    }
+  },
 }
 </script>
 //

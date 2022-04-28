@@ -207,9 +207,10 @@ export default {
         user: false,
       },
       github: {
-        clientId: '62a6f93ad4b02a042402',
-        clientSecret: 'b23e57d581df85d5aa25edf5bd79c64bcb5fc0eb',
-        scope: ['user:email'],
+        clientId: '08a183cfde3b1e48f16e',
+        clientSecret: 'b8ae11cae6d736469087e6eef2902ceb4088e21a',
+        // redirectUri: 'http://localhost:4200/github/callback',
+        scope: ['user'],
       },
       linkedin: {
         scheme: 'oauth2',
