@@ -1,7 +1,7 @@
 <template>
   <div class="soical-media-logo">
     <div class="wrapper">
-      <div class="button" @click="google">
+      <div class="button" id="customGoogleBtn" ref="customGoogleBtn">
         <div class="icon">
           <div class="google-logo">
             <img class="img-fluid" src="/logos/google-logo.svg" alt="Google" />
@@ -60,6 +60,47 @@ export default {
   },
   computed: {},
   created() {},
+  mounted() {
+    const element = this.$refs.customGoogleBtn
+    const axios = this.$axios
+    const auth = this.$auth
+    const router = this.$router
+
+    setTimeout(() => {
+      gapi.load('auth2', function () {
+        // Retrieve the singleton for the GoogleAuth library and set up the client.
+        const auth2 = gapi.auth2.init({
+          client_id:
+            '502596011364-sjknof9ljs54hhl4rer5tc70m8800n69.apps.googleusercontent.com',
+          cookiepolicy: 'single_host_origin',
+        })
+        auth2.attachClickHandler(
+          element,
+          {},
+          function (googleUser) {
+            var id_token = googleUser.getAuthResponse().id_token
+
+            const url = `/auth/signup/google?token=${id_token}`
+
+            axios.post(url, null).then(function (res) {
+              auth.reset()
+              auth.setStrategy('local')
+              auth.setUserToken(res.data.access_token, res.data.refresh_token)
+              auth.setUser(res.data.user)
+              if (!res.data.user.workspace) {
+                router.push({
+                  path: '/dashboard/workspace',
+                })
+              }
+            })
+          },
+          function (error) {
+            alert(JSON.stringify(error, undefined, 2))
+          }
+        )
+      })
+    })
+  },
   methods: {
     async facebook() {
       await this.$auth.loginWith('facebook')
@@ -72,16 +113,39 @@ export default {
     },
     async githug() {
       await this.$auth.loginWith('github')
-      // this.$axios
-      //   .get('https://github.com/login/oauth/authorize', {
-      //     params: {
-      //       client_id: '08a183cfde3b1e48f16e',
-      //       // redirect_uri: 'http://localhost:4200/github/callback',
-      //       scope: 'user',
-      //     },
-      //     headers: { 'Access-Control-Allow-Origin': '*', Accept: 'text/plain' },
-      //   })
-      //   .then((res) => console.log(res))
+    },
+    onSignIn(user) {
+      console.log('invoking onSignin...')
+      const profile = user.getBasicProfile()
+      console.log('ID: ' + profile.getId()) // Don't send this directly to your server!
+      console.log('Full Name: ' + profile.getName())
+      console.log('Given Name: ' + profile.getGivenName())
+      console.log('Family Name: ' + profile.getFamilyName())
+      console.log('Image URL: ' + profile.getImageUrl())
+      console.log('Email: ' + profile.getEmail())
+
+      // The ID token you need to pass to your backend:
+      var id_token = user.getAuthResponse().id_token
+      console.log('ID Token: ' + id_token)
+    },
+    attachSignin(element) {
+      console.log(element.id)
+      auth2.attachClickHandler(
+        element,
+        {},
+        function (googleUser) {
+          const profile = googleUser.getBasicProfile()
+          console.log('ID: ' + profile.getId()) // Don't send this directly to your server!
+          console.log('Full Name: ' + profile.getName())
+          console.log('Given Name: ' + profile.getGivenName())
+          console.log('Family Name: ' + profile.getFamilyName())
+          console.log('Image URL: ' + profile.getImageUrl())
+          console.log('Email: ' + profile.getEmail())
+        },
+        function (error) {
+          alert(JSON.stringify(error, undefined, 2))
+        }
+      )
     },
   },
 }

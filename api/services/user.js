@@ -1,4 +1,5 @@
 "use strict";
+
 var __awaiter =
   (this && this.__awaiter) ||
   function (thisArg, _arguments, P, generator) {
@@ -42,6 +43,8 @@ const node_fetch_1 = __importDefault(require("node-fetch"));
 const User_1 = require("../models/User");
 const error_handler_1 = __importDefault(require("../config/error-handler"));
 const config_1 = __importDefault(require("../config"));
+const { OAuth2Client } = require("google-auth-library");
+
 class UserService {
   create(user) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -133,21 +136,46 @@ class UserService {
       return user;
     });
   }
+  // authenticateWithGoogle(token) {
+  //   return __awaiter(this, void 0, void 0, function* () {
+  //     console.log(`google auth validation started with token: ${token}`);
+  //     const url = config_1.default.google.apiUrl;
+  //     const response = yield node_fetch_1.default(url, {
+  //       method: "get",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     const userData = yield response.json();
+  //     console.log("Returned google email after oauth: " + userData.email);
+  //     const userObj = {
+  //       firstName: userData.given_name,
+  //       lastName: userData.family_name,
+  //       email: userData.email,
+  //     };
+  //     const user = yield User_1.User.findOne({ email: userObj.email });
+  //     if (!user) {
+  //       const newUser = yield User_1.User.create(userObj);
+  //       return newUser;
+  //     }
+  //     return user;
+  //   });
+  // }
   authenticateWithGoogle(token) {
     return __awaiter(this, void 0, void 0, function* () {
-      const url = config_1.default.google.apiUrl;
-      const response = yield node_fetch_1.default(url, {
-        method: "get",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const client = new OAuth2Client(
+        config_1.default.google.clientID,
+        config_1.default.google.clientSecret
+      );
+      const ticket = yield client.verifyIdToken({
+        idToken: token,
+        audience: config_1.default.google.clientID,
       });
-      const userData = yield response.json();
-      console.log("Returned google email after oauth: " + userData.email);
+      const payload = ticket.getPayload();
       const userObj = {
-        firstName: userData.given_name,
-        lastName: userData.family_name,
-        email: userData.email,
+        firstName: payload["given_name"],
+        lastName: payload["family_name"],
+        email: payload["email"],
       };
       const user = yield User_1.User.findOne({ email: userObj.email });
       if (!user) {
