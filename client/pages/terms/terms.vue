@@ -3,7 +3,13 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <v-card color="transparent" flat tile class="mt-8 mb-16">
+          <v-card
+            color="transparent"
+            flat
+            tile
+            class="mt-8 mb-16"
+            style="margin-top: 100px"
+          >
             <v-card-text>
               These terms of use ("Terms") constitute a legally binding
               agreement between you and iotsnackbox. (the "Company") regarding

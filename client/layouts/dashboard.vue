@@ -358,7 +358,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <Confirm ref="confirm"/>
+    <Confirm ref="confirm" />
   </v-app>
 </template>
 <script>
@@ -407,6 +407,11 @@ export default {
       this.$router.push({
         path: '/dashboard/workspace',
       })
+    }
+  },
+  fetch({ redirect, $auth }) {
+    if ($auth.loggedIn && !$auth.user.workspace) {
+      redirect('/dashboard/workspace')
     }
   },
   computed: {
