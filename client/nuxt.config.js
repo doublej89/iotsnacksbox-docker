@@ -36,6 +36,15 @@ export default {
         name: 'description',
         content: process.env.npm_package_description || '',
       },
+      // {
+      //   name: 'google-signin-scope',
+      //   content: 'profile email',
+      // },
+      // {
+      //   name: 'google-signin-client_id',
+      //   content:
+      //     '502596011364-sjknof9ljs54hhl4rer5tc70m8800n69.apps.googleusercontent.com',
+      // },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -63,6 +72,11 @@ export default {
       {
         src: '/js/bootstrap.bundle.min.js',
         body: true,
+      },
+      {
+        src: 'https://apis.google.com/js/api:client.js',
+        defer: true,
+        async: true,
       },
     ],
   },
@@ -203,13 +217,19 @@ export default {
       },
       google: {
         clientId:
-          '943564522948-plq7dthe55ng8fl16f60f222651jt2hf.apps.googleusercontent.com',
-        user: false,
+          '502596011364-sjknof9ljs54hhl4rer5tc70m8800n69.apps.googleusercontent.com',
+        responseType: 'code',
+        codeChallengeMethod: '',
+        // endpoints: {
+        //   token: 'http://localhost:5000/api/auth/signup/google',
+        //   //  userInfo: 'http://localhost:8000/auth/user/'
+        // },
       },
       github: {
-        clientId: '62a6f93ad4b02a042402',
-        clientSecret: 'b23e57d581df85d5aa25edf5bd79c64bcb5fc0eb',
-        scope: ['user:email'],
+        clientId: '08a183cfde3b1e48f16e',
+        clientSecret: 'b8ae11cae6d736469087e6eef2902ceb4088e21a',
+        // redirectUri: 'http://localhost:4200/github/callback',
+        scope: ['user'],
       },
       linkedin: {
         scheme: 'oauth2',

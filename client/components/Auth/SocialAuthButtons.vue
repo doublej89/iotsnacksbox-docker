@@ -1,7 +1,7 @@
 <template>
   <div class="soical-media-logo">
     <div class="wrapper">
-      <div class="button" @click="google">
+      <div class="button" id="customGoogleBtn" ref="customGoogleBtn">
         <div class="icon">
           <div class="google-logo">
             <img class="img-fluid" src="/logos/google-logo.svg" alt="Google" />
@@ -60,6 +60,47 @@ export default {
   },
   computed: {},
   created() {},
+  mounted() {
+    const element = this.$refs.customGoogleBtn
+    const axios = this.$axios
+    const auth = this.$auth
+    const router = this.$router
+
+    setTimeout(() => {
+      gapi.load('auth2', function () {
+        // Retrieve the singleton for the GoogleAuth library and set up the client.
+        const auth2 = gapi.auth2.init({
+          client_id:
+            '502596011364-sjknof9ljs54hhl4rer5tc70m8800n69.apps.googleusercontent.com',
+          cookiepolicy: 'single_host_origin',
+        })
+        auth2.attachClickHandler(
+          element,
+          {},
+          function (googleUser) {
+            var id_token = googleUser.getAuthResponse().id_token
+
+            const url = `/auth/signup/google?token=${id_token}`
+
+            axios.post(url, null).then(function (res) {
+              auth.reset()
+              auth.setStrategy('local')
+              auth.setUserToken(res.data.access_token, res.data.refresh_token)
+              auth.setUser(res.data.user)
+              if (!res.data.user.workspace) {
+                router.push({
+                  path: '/dashboard/workspace',
+                })
+              }
+            })
+          },
+          function (error) {
+            alert(JSON.stringify(error, undefined, 2))
+          }
+        )
+      })
+    })
+  },
   methods: {
     async facebook() {
       await this.$auth.loginWith('facebook')

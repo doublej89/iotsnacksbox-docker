@@ -21,5 +21,14 @@ export default {
       })
     },
   },
+  fetch({ redirect, $auth }) {
+    if ($auth.loggedIn) {
+      if (!$auth.user.workspace) {
+        redirect('/dashboard/workspace')
+      } else {
+        redirect('/dashboard')
+      }
+    }
+  },
 }
 </script>

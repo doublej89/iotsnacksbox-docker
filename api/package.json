@@ -39,6 +39,7 @@
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "express-validator": "^6.6.1",
+    "google-auth-library": "^8.0.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",

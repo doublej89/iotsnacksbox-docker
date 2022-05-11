@@ -31,7 +31,14 @@ const bluebird_1 = __importDefault(require("bluebird"));
 const socketIo = __importStar(require("socket.io"));
 const cron_1 = require("cron");
 const secrets_1 = require("./util/secrets");
-const api_1 = __importDefault(require("./routes/api"));
+const component = __importStar(require("./controllers/api/component"));
+const widget = __importStar(require("./controllers/api/widget"));
+const workspace_1 = __importDefault(require("./controllers/api/workspace"));
+const payment_1 = __importDefault(require("./controllers/api/payment"));
+const subscription_1 = __importDefault(require("./controllers/api/subscription"));
+const plan_1 = __importDefault(require("./controllers/api/plan"));
+// API keys and Passport configuration
+const registryController = __importStar(require("./controllers/api/registry"));
 const middlewares_1 = __importDefault(require("./middlewares"));
 const user_1 = __importDefault(require("./controllers/user"));
 const snacksbox = __importStar(require("./controllers/snacksbox"));
@@ -114,7 +121,34 @@ app.post("/api/contact", contact_1.default.contactUs);
 /**
  * API examples routes.
  */
-app.use("/api", middlewares_1.default.auth, api_1.default);
+app.get("/api/components", middlewares_1.default.auth, component.getComponents);
+app.get("/api/components/self", middlewares_1.default.auth, component.getSelfComponents);
+app.post("/api/components", middlewares_1.default.auth, component.postComponent);
+app.put("/api/components/:id", middlewares_1.default.auth, component.putComponent);
+app.put("/api/components/:id/active", middlewares_1.default.auth, component.activeComponent);
+app.delete("/api/components/:id", middlewares_1.default.auth, component.deleteComponent);
+app.post("/api/components/:id/add-actions", middlewares_1.default.auth, component.addActions);
+app.post("/api/components/:id/add-triggets", middlewares_1.default.auth, component.addTriggers);
+app.get("/api/registries", middlewares_1.default.auth, registryController.getRegistries);
+app.post("/api/registries", middlewares_1.default.auth, registryController.addRegistry);
+app.put("/api/registries/:id", middlewares_1.default.auth, registryController.updateRegistry);
+app.delete("/api/registries/:id", middlewares_1.default.auth, registryController.deleteRegistry);
+app.post("/api/registries/action", middlewares_1.default.auth, registryController.postAction);
+app.get("/api/registries/trigger", middlewares_1.default.auth, registryController.getTrigger);
+app.get("/api/widgets", middlewares_1.default.auth, widget.getWidgets);
+app.post("/api/widgets", middlewares_1.default.auth, widget.storeWidget);
+app.delete("/api/widgets/:id", middlewares_1.default.auth, widget.destroyWidget);
+app.get("/api/workspace/my-workspaces", middlewares_1.default.auth, workspace_1.default.myWorkspaces);
+app.get("/api/workspace/members", middlewares_1.default.auth, workspace_1.default.getMembers);
+app.get("/api/workspace/transactions", middlewares_1.default.auth, workspace_1.default.getTransactions);
+app.post("/api/workspace", middlewares_1.default.auth, workspace_1.default.createWorkspace);
+app.post("/api/deposit", middlewares_1.default.auth, payment_1.default.deposit);
+app.post("/api/webhook/payment", middlewares_1.default.auth, payment_1.default.webhook);
+app.post("/api/subscription", middlewares_1.default.auth, subscription_1.default.createSubscription);
+app.get("/api/subscription", middlewares_1.default.auth, subscription_1.default.getSubscriptions);
+app.post("/api/plan", middlewares_1.default.auth, plan_1.default.createPlan);
+app.get("/api/plan", middlewares_1.default.auth, plan_1.default.getPlans);
+app.post("/api/snacksbox/verify", middlewares_1.default.auth, snacksbox.verifySnackBox);
 /**
  * OAuth authentication routes. (Sign in)
  */

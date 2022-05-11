@@ -22,7 +22,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    ports: 
+    ports:
       - "4200:4200"
     container_name: client
     depends_on:
@@ -32,7 +32,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     ports:
-      - '5000:5000'
+      - "5000:5000"
     restart: on-failure
     container_name: api
     env_file:
@@ -41,14 +41,14 @@ services:
       - mongo
       - redis
   mongo:
-    image: 'mongo'
-    container_name: 'mongo-db'
+    image: "mongo"
+    container_name: "mongo-db"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=iotsnacks
       - MONGO_INITDB_ROOT_PASSWORD=mongopass
     ports:
-      - '27017-27019:27017-27019'
-    volumes: 
+      - "27017-27019:27017-27019"
+    volumes:
       - iotmongo-db:/data/db
   redis:
     image: redis
