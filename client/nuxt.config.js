@@ -209,9 +209,8 @@ export default {
         },
         autoLogout: false,
       },
-
       facebook: {
-        clientId: '352652462786335',
+        clientId: '292625749742356',
         userinfo_endpoint: false,
         scope: ['public_profile', 'email'],
       },
