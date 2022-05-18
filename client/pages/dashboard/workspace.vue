@@ -1,105 +1,84 @@
 <template>
-  <div class="workspace">
-    <v-container>
-      <v-row>
-        <v-col cols="12" offset-md="3" md="6">
-          <v-card color="transparent" flat tile>
-            <div class="pt-10 pb-5">
-              <v-img
-                src="/images/logo.png"
-                max-width="100px"
-                class="mx-auto"
-              ></v-img>
-            </div>
-            <v-card-title class="text-h4 justify-center text-center">
-              Enter a workspace name (no spaces or special characters)
-            </v-card-title>
-            <!-- <v-card-title
-              class="font-weight-light py-0 justify-center text-center text-subtitle-1"
-            >
-              We suggest using the
-              <span class="font-weight-medium ml-1"
-                >email address you use at work.</span
-              >
-            </v-card-title> -->
-            <v-card-text class="pa-10">
-              <v-row>
-                <v-col cols="12">
-                  <validation-observer
-                    ref="wsValidationObserver"
-                    v-slot="{ passed, handleSubmit }"
-                  >
-                    <v-form
-                      v-model="valid"
-                      @submit.prevent="handleSubmit(createWorkspace)"
-                    >
-                      <v-col cols="12">
-                        <validation-provider
-                          v-slot="{ errors }"
-                          name="workspace"
-                          rules="required|noSpecialCharOrSpace|uniqWorkspace"
-                          :debounce="500"
-                        >
-                          <v-text-field
-                            v-model="workspace"
-                            :error-messages="errors"
-                            placeholder="workspace name"
-                          ></v-text-field>
-                        </validation-provider>
-                      </v-col>
+  <div class="container-fluid">
+    <div class="row" style="margin-top: 80px">
+      <div class="col-sm-12 col-md-6 mx-auto p-3">
+        <!-- <div class="logo">
+          <img class="img-fluid" src="/logos/logo.svg" />
+        </div> -->
 
-                      <v-col cols="12">
-                        <v-btn
-                          depressed
-                          block
-                          color="primary"
-                          type="submit"
-                          :disabled="!passed"
-                          >Create Workspace</v-btn
-                        >
-                      </v-col>
-                    </v-form>
-                  </validation-observer>
-                </v-col>
-                <v-col v-if="workspaces.length > 0" cols="12">
-                  <div class="middle-divider"><span>Or</span></div>
-                  <!-- <v-checkbox
-                    color="primary"
-                    label="It’s okay to send me emails about IoTSnackBox."
-                    hide-details
-                  >
-                  </v-checkbox> -->
-                  <v-card-title class="text-h4 justify-center text-center">
-                    Switch to a different workspace
-                  </v-card-title>
-                  <v-select
-                    v-model="selectedWorkspace"
-                    :items="workspaces"
-                    label="Switch Workspace"
-                    outlined
-                    @change="switchWorkspace"
-                  ></v-select>
-                </v-col>
-                <!-- <v-col cols="12">
-                  <p class="mb-0">
-                    By continuing, you’re agreeing to our
-                    <a href="#" class="text-decoration-none font-weight-medium"
-                      >Customer Terms of Service</a
-                    >,
-                    <a href="#" class="text-decoration-none font-weight-medium"
-                      >Privacy Policy</a
-                    >, and
-                    <a href="#" class="text-decoration-none font-weight-medium"
-                      >Cookie Policy</a
-                    >.
-                  </p>
-                </v-col> -->
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+        <div class="right-header1">
+          <h2>Enter a workspace name (no spaces or special characters)</h2>
+        </div>
+        <ValidationObserver ref="observer" v-slot="{ passed, handleSubmit }">
+          <form ref="form" @submit.prevent="handleSubmit(createWorkspace)">
+            <div class="form-row">
+              <div class="form-group col-12">
+                <label for="workspace">Workspace</label>
+                <ValidationProvider
+                  v-slot="{ errors, classes }"
+                  name="workspace"
+                  rules="required|noSpecialCharOrSpace|uniqWorkspace"
+                  :debounce="500"
+                >
+                  <input
+                    v-model="workspace"
+                    type="text"
+                    class="form-control"
+                    :class="classes"
+                    id="workspace"
+                    placeholder="Enter Workspace"
+                  />
+                  <small class="text-danger">
+                    {{ errors[0] }}
+                  </small>
+                </ValidationProvider>
+              </div>
+            </div>
+
+            <div class="form-row" v-if="loading">
+              <v-progress-circular
+                indeterminate
+                color="#122e7e"
+              ></v-progress-circular>
+            </div>
+            <div class="button-create-account">
+              <button
+                :disabled="!passed || loading"
+                type="submit"
+                class="btn btn-primary"
+              >
+                Create Workspace
+              </button>
+            </div>
+          </form>
+        </ValidationObserver>
+        <div v-if="workspaces.length > 0">
+          <div id="orsection" class="text-muted">
+            <p>---------------- Or ----------------</p>
+          </div>
+          <div class="right-header1">
+            <h2>Switch to a different workspace</h2>
+          </div>
+          <form>
+            <div class="form-row">
+              <div class="form-group col-12">
+                <label for="exampleFormControlSelect2">Switch Workspace</label>
+                <select
+                  v-model="selectedWorkspace"
+                  class="form-control"
+                  id="exampleFormControlSelect2"
+                  @change="switchWorkspace($event)"
+                >
+                  <option v-for="workspace in workspaces" :key="workspace._id">
+                    {{ workspace }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -111,20 +90,20 @@ export default {
     ValidationProvider,
     ValidationObserver,
   },
-  async fetch() {
-    try {
-      const response = await this.$axios.get('/workspace/my-workspaces')
+  // async fetch() {
+  //   try {
+  //     const response = await this.$axios.get('/workspace/my-workspaces')
 
-      if (response.data.length > 0) {
-        response.data.forEach((workspace) => {
-          this.workspaces.push(workspace.name)
-        })
-      }
-    } catch (error) {
-      this.$notify.error(error.response.data.message)
-      this.workspaces = []
-    }
-  },
+  //     if (response.data.length > 0) {
+  //       response.data.forEach((workspace) => {
+  //         this.workspaces.push(workspace.name)
+  //       })
+  //     }
+  //   } catch (error) {
+  //     this.$notify.error(error.response.data.message)
+  //     this.workspaces = []
+  //   }
+  // },
   data() {
     return {
       workspace: '',
@@ -132,6 +111,21 @@ export default {
       valid: true,
       selectedWorkspace: '',
     }
+  },
+  created() {
+    this.$axios
+      .get('/workspace/my-workspaces')
+      .then((response) => {
+        if (response.data.length > 0) {
+          response.data.forEach((workspace) => {
+            this.workspaces.push(workspace.name)
+          })
+        }
+      })
+      .catch((error) => {
+        this.$notify.error(error.response.data.message)
+        this.workspaces = []
+      })
   },
   methods: {
     async createWorkspace() {
@@ -153,7 +147,8 @@ export default {
         this.$notify.error(error.response.data.message)
       }
     },
-    switchWorkspace(workspace) {
+    switchWorkspace(e) {
+      const workspace = e.target.options[e.target.options.selectedIndex].text
       if (
         !this.$auth.user.workspace ||
         (this.$auth.user.workspace &&
@@ -181,3 +176,6 @@ export default {
   },
 }
 </script>
+<style scoped lang="sass">
+@import assets/css/auth.css
+</style>
