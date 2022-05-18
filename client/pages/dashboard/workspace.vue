@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row" style="margin-top: 80px">
-      <div class="col-sm-12 col-md-6 mx-auto p-3">
+      <div class="col-sm-12 col-md-6 mx-auto p-4">
         <!-- <div class="logo">
           <img class="img-fluid" src="/logos/logo.svg" />
         </div> -->
@@ -52,7 +52,10 @@
             </div>
           </form>
         </ValidationObserver>
-        <div v-if="workspaces.length > 0">
+        <div
+          style="margin-top: 20px; margin-bottom: 20px"
+          v-if="workspaces.length > 0"
+        >
           <div id="orsection" class="text-muted">
             <p>---------------- Or ----------------</p>
           </div>
@@ -90,20 +93,6 @@ export default {
     ValidationProvider,
     ValidationObserver,
   },
-  // async fetch() {
-  //   try {
-  //     const response = await this.$axios.get('/workspace/my-workspaces')
-
-  //     if (response.data.length > 0) {
-  //       response.data.forEach((workspace) => {
-  //         this.workspaces.push(workspace.name)
-  //       })
-  //     }
-  //   } catch (error) {
-  //     this.$notify.error(error.response.data.message)
-  //     this.workspaces = []
-  //   }
-  // },
   data() {
     return {
       workspace: '',
