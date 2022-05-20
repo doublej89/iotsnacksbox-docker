@@ -40,10 +40,12 @@ var __importDefault =
   };
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_fetch_1 = __importDefault(require("node-fetch"));
+const FormData = require('form-data');
 const User_1 = require("../models/User");
 const error_handler_1 = __importDefault(require("../config/error-handler"));
 const config_1 = __importDefault(require("../config"));
 const { OAuth2Client } = require("google-auth-library");
+const request = require('request');
 
 class UserService {
   create(user) {
@@ -134,6 +136,69 @@ class UserService {
         yield user.save();
       }
       return user;
+    });
+  }
+  authenticateWithLinkedIn(code) {
+    return __awaiter(this, void 0, void 0, function* () {
+      const ghAPIUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
+      const formData = `grant_type=authorization_code&code=${code}&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Flinkedin&client_id=776elowreek2t4&client_secret=yzXvb6vZ0nyxgUd6`;
+      console.log(formData);
+
+      // request.post({ url: ghAPIUrl, form: {
+      //   grant_type: 'authorization_code',
+      //   code: code,
+      //   redirect_uri: 'http://localhost:4200/linkedin',
+      //   client_id: '776elowreek2t4',
+      //   client_secret: 'yzXvb6vZ0nyxgUd6'
+      // }}, function(err, res, responseBody) {
+      //   if (err) {
+      //     console.log(err);
+      //   } else {
+      //     console.log(JSON.parse(responseBody));
+      //     return JSON.parse(responseBody);
+      //   }
+      // });
+
+      // console.log(code)
+
+      // formData.append('grant_type', 'authorization_code')
+      // formData.append('code', code)
+      // formData.append('redirect_uri', 'http://localhost:4200/linkedin')
+      // formData.append('client_id', '776elowreek2t4')
+      // formData.append('client_secret', 'yzXvb6vZ0nyxgUd6')
+
+      const response = yield node_fetch_1.default(ghAPIUrl, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        // headers: formData.getHeaders()
+      });
+      console.log(response)
+      
+      const tokenData = yield response.json();
+
+      
+      console.log(userData)
+      return userData
+      // const userObj = {
+      //   firstName: userData.name,
+      //   lastName: "",
+      //   email: userData.email,
+      //   avatar: userData.avatar_url,
+      //   github: userData,
+      // };
+      // const user = yield User_1.User.findOne({ email: userObj.email });
+      // if (!user) {
+      //   const newUser = yield User_1.User.create(userObj);
+      //   return newUser;
+      // }
+      // if (user.github.id != userData.id) {
+      //   user.github = userObj.github;
+      //   yield user.save();
+      // }
+      // return user;
     });
   }
   // authenticateWithGoogle(token) {

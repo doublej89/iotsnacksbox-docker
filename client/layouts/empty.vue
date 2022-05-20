@@ -16,4 +16,5 @@ export default {
 
 <style lang="sass">
 @import assets/css/bootstrap.min.css
+@import assets/css/frontend.css
 </style>
