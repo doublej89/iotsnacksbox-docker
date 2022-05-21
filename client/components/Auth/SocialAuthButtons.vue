@@ -111,63 +111,13 @@ export default {
       const scope = 'r_liteprofile%20r_emailaddress'
       const url = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&state=8571925473&scope=${scope}&client_id=${clientId}&redirect_uri=${encodedRedirectUrl}`
 
-      // const params = {
-      //   response_type: 'code',
-      //   state: '8571925473',
-      //   scope: scope,
-      //   client_id: clientId,
-      //   redirect_uri: encodedRedirectUrl,
-      // }
-
       window.location.href = url
-
-      // try {
-      //   const response = await this.$axios.get(url, {
-      //     headers: { 'Access-Control-Allow-Origin': '*' },
-      //   })
-      //   console.log(response.data)
-      // } catch (e) {
-      //   console.log(e)
-      // }
     },
     async google() {
       await this.$auth.loginWith('google')
     },
     async githug() {
       await this.$auth.loginWith('github')
-    },
-    onSignIn(user) {
-      console.log('invoking onSignin...')
-      const profile = user.getBasicProfile()
-      console.log('ID: ' + profile.getId()) // Don't send this directly to your server!
-      console.log('Full Name: ' + profile.getName())
-      console.log('Given Name: ' + profile.getGivenName())
-      console.log('Family Name: ' + profile.getFamilyName())
-      console.log('Image URL: ' + profile.getImageUrl())
-      console.log('Email: ' + profile.getEmail())
-
-      // The ID token you need to pass to your backend:
-      var id_token = user.getAuthResponse().id_token
-      console.log('ID Token: ' + id_token)
-    },
-    attachSignin(element) {
-      console.log(element.id)
-      auth2.attachClickHandler(
-        element,
-        {},
-        function (googleUser) {
-          const profile = googleUser.getBasicProfile()
-          console.log('ID: ' + profile.getId()) // Don't send this directly to your server!
-          console.log('Full Name: ' + profile.getName())
-          console.log('Given Name: ' + profile.getGivenName())
-          console.log('Family Name: ' + profile.getFamilyName())
-          console.log('Image URL: ' + profile.getImageUrl())
-          console.log('Email: ' + profile.getEmail())
-        },
-        function (error) {
-          alert(JSON.stringify(error, undefined, 2))
-        }
-      )
     },
   },
 }

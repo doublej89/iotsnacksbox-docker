@@ -39,6 +39,7 @@ const userSchema = new mongoose_1.default.Schema({
     state: String,
     country: String,
     occupation: String,
+    institute: String,
     bio: String,
     mobile: String,
     workspace: {

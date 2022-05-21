@@ -1,15 +1,16 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-12 mx-auto p-4">
+      <div class="col-12 mx-auto">
         <div class="text-center">
-          <div
+          <!-- <div
             class="spinner-border"
             style="width: 8rem; height: 8rem"
             role="status"
           >
             <span class="sr-only">Loading...</span>
-          </div>
+          </div> -->
+          <h2 style="padding-top: 30px">Sigining in...</h2>
         </div>
       </div>
     </div>
@@ -25,19 +26,25 @@ export default {
   computed: {},
   async created() {
     const { code, state } = this.$route.query
-    // const formData = new FormData()
 
-    // formData.append('grant_type', 'authorization_code')
-    // formData.append('code', code)
-    // formData.append('redirect_uri', 'http%3A%2F%2Flocalhost%3A4200%2Flinkedin')
-    // formData.append('client_id', '776elowreek2t4')
-    // formData.append('client_secret', 'yzXvb6vZ0nyxgUd6')
-
-    const response = await this.$axios.post(
+    const res = await this.$axios.post(
       `/auth/signup/linkedin?code=${code}`,
       null
     )
-    console.log(response.data)
+    console.log(res.data)
+    this.$auth.reset()
+    this.$auth.setStrategy('local')
+    this.$auth.setUserToken(res.data.access_token, res.data.refresh_token)
+    this.$auth.setUser(res.data.user)
+    if (!res.data.user.workspace) {
+      this.$router.push({
+        path: '/dashboard/workspace',
+      })
+    } else {
+      this.$router.push({
+        path: '/dashboard',
+      })
+    }
   },
   methods: {},
 }

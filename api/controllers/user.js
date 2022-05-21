@@ -402,14 +402,13 @@ class UserController {
             const { code } = req.query;
 
             const user = yield user_1.default.authenticateWithLinkedIn(code);
-            res.status(200).json({ "success": user });
-            // const accessToken = token_1.default.generateJwt(user);
-            // const refreshToken = yield token_1.default.generateRefreshToken({
-            //     user: user._id,
-            //     device: req.get("user-agent"),
-            //     ip: req.ip,
-            // });
-            // res.status(200).json({ "access_token": accessToken, "refresh_token": refreshToken, user: user.toJSON() });
+            const accessToken = token_1.default.generateJwt(user);
+            const refreshToken = yield token_1.default.generateRefreshToken({
+                user: user._id,
+                device: req.get("user-agent"),
+                ip: req.ip,
+            });
+            res.status(200).json({ "access_token": accessToken, "refresh_token": refreshToken, user: user.toJSON() });
         });
     }
     // async authenticateLine(req: Request, res: Response): Promise<void> {

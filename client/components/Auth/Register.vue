@@ -173,6 +173,23 @@
                     </validation-provider>
                   </div>
                 </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="institute">Institute</label>
+
+                      <input
+                        v-model="institute"
+                        type="institute"
+                        class="form-control"
+                        :class="classes"
+                        id="pswd"
+                        placeholder="Enter Institute"
+                      />
+
+
+                  </div>
+
+                </div>
 
                 <div class="form-group">
                   <div class="form-check">
@@ -267,6 +284,7 @@ export default {
       password: '',
       confirmPassword: '',
       errorMessage: '',
+      institute: '',
       valid: true,
     }
   },
@@ -280,6 +298,7 @@ export default {
           password,
           confirmPassword,
           workspace,
+          institute,
         } = this
 
         this.errorMessage = ''
@@ -292,6 +311,7 @@ export default {
           password,
           confirmPassword,
           workspace,
+          institute,
         })
         await this.$auth.setUserToken(
           res.data.access_token,
