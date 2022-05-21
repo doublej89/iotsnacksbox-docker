@@ -24,7 +24,7 @@ export default {
     return {}
   },
   computed: {},
-  async created() {
+  async mounted() {
     const { code } = this.$route.query
     console.log(`code at frontend: ${code}`)
 
@@ -32,6 +32,7 @@ export default {
       `/auth/signup/linkedin?code=${code}`,
       null
     )
+    console.log(res.data)
     this.$auth.reset()
     this.$auth.setStrategy('local')
     this.$auth.setUserToken(res.data.access_token, res.data.refresh_token)
