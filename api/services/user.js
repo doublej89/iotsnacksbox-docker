@@ -150,6 +150,7 @@ class UserService {
       });
       
       const tokenData = yield response.json();
+      console.log(tokenData);
 
       const profileRes = yield node_fetch_1.default('https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))', {
         method: 'GET',
@@ -163,10 +164,11 @@ class UserService {
           'Authorization': `Bearer ${tokenData['access_token']}`,
         },
       });
-
+      
       const profileData = yield profileRes.json();
       const emailData = yield emailRes.json();      
-      
+      console.log(profileData);
+      console.log(emailData)
       const userObj = {
         firstName: profileData['firstName']['localized']['en_US'],
         lastName: profileData['lastName']['localized']['en_US'],
