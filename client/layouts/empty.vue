@@ -14,7 +14,7 @@ export default {
 }
 </script>
 
-<!-- <style lang="sass">
+<style lang="sass">
 @import assets/css/bootstrap.min.css
-@import assets/css/auth.css
-</style> -->
+@import assets/css/frontend.css
+</style>

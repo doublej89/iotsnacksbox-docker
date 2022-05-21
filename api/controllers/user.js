@@ -397,6 +397,20 @@ class UserController {
             res.status(200).json({ "access_token": accessToken, "refresh_token": refreshToken, user: user.toJSON() });
         });
     }
+    authenticatLinkedin(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { code } = req.query;
+
+            const user = yield user_1.default.authenticateWithLinkedIn(code);
+            const accessToken = token_1.default.generateJwt(user);
+            const refreshToken = yield token_1.default.generateRefreshToken({
+                user: user._id,
+                device: req.get("user-agent"),
+                ip: req.ip,
+            });
+            res.status(200).json({ "access_token": accessToken, "refresh_token": refreshToken, user: user.toJSON() });
+        });
+    }
     // async authenticateLine(req: Request, res: Response): Promise<void> {
     //   const { access_token } = req.body;
     //   const user = await userService.authenticateWithLine(access_token);

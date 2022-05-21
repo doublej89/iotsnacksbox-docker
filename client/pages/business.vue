@@ -81,7 +81,7 @@
                     Education is Innovation
                   </v-card-title>
                   <v-card-title class="title-text">
-                    Ubidots and our partners are committed to the expansion and
+                    IoT Snacks box and our partners are committed to the expansion and
                     availability of problem solving technologies. We believe
                     personal tech exploration will yield global externalities
                     towards the economization of precious resources many take

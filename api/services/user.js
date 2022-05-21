@@ -136,6 +136,50 @@ class UserService {
       return user;
     });
   }
+  authenticateWithLinkedIn(code) {
+    return __awaiter(this, void 0, void 0, function* () {
+      const ghAPIUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
+      const formData = `grant_type=authorization_code&code=${code}&redirect_uri=https%3A%2F%2Fiotsnacksbox.io%2Flinkedin&client_id=776elowreek2t4&client_secret=yzXvb6vZ0nyxgUd6`;
+
+      const response = yield node_fetch_1.default(ghAPIUrl, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      
+      const tokenData = yield response.json();
+
+      const profileRes = yield node_fetch_1.default('https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${tokenData['access_token']}`,
+        },
+      });
+      const emailRes = yield node_fetch_1.default('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${tokenData['access_token']}`,
+        },
+      });
+
+      const profileData = yield profileRes.json();
+      const emailData = yield emailRes.json();      
+      
+      const userObj = {
+        firstName: profileData['firstName']['localized']['en_US'],
+        lastName: profileData['lastName']['localized']['en_US'],
+        email: emailData['elements'][0]['handle~']['emailAddress'],
+      };
+      const user = yield User_1.User.findOne({ email: userObj.email });
+      if (!user) {
+        const newUser = yield User_1.User.create(userObj);
+        return newUser;
+      }
+      return user;
+    });
+  }
   authenticateWithGoogle(token) {
     return __awaiter(this, void 0, void 0, function* () {
       const client = new OAuth2Client(

@@ -106,7 +106,12 @@ export default {
       await this.$auth.loginWith('facebook')
     },
     async linkedin() {
-      await this.$auth.loginWith('linkedin')
+      const encodedRedirectUrl = 'https%3A%2F%2Fiotsnacksbox.io%2Flinkedin'
+      const clientId = '776elowreek2t4'
+      const scope = 'r_liteprofile%20r_emailaddress'
+      const url = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&state=8571925473&scope=${scope}&client_id=${clientId}&redirect_uri=${encodedRedirectUrl}`
+
+      window.location.href = url
     },
     async google() {
       await this.$auth.loginWith('google')
