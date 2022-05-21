@@ -26,6 +26,7 @@ export default {
   computed: {},
   async created() {
     const { code } = this.$route.query
+    console.log(`code at frontend: ${code}`)
 
     const res = await this.$axios.post(
       `/auth/signup/linkedin?code=${code}`,

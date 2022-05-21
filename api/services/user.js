@@ -138,6 +138,7 @@ class UserService {
   }
   authenticateWithLinkedIn(code) {
     return __awaiter(this, void 0, void 0, function* () {
+      console.log(`code at backend: ${code}`)
       const ghAPIUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
       const formData = `grant_type=authorization_code&code=${code}&redirect_uri=https%3A%2F%2Fiotsnacksbox.io%2Flinkedin&client_id=776elowreek2t4&client_secret=yzXvb6vZ0nyxgUd6`;
 
