@@ -19,6 +19,10 @@ const error_handler_1 = __importDefault(require("../config/error-handler"));
 const token_1 = __importDefault(require("../services/token"));
 const queue_1 = __importDefault(require("../util/queue"));
 const auth_1 = __importDefault(require("../services/auth"));
+const aws_sdk_1 = __importDefault(require("aws-sdk"));
+const config_1 = __importDefault(require("../config"));
+const mailer_1 = __importDefault(require("../mailer/mailer"));
+
 class UserController {
     validate(method) {
         let rules = [];
@@ -140,7 +144,15 @@ class UserController {
                     device: req.get("user-agent"),
                     ip: req.ip,
                 });
-                queue_1.default.dispatch("Registered", user);
+                const reciver = {
+                    name: user.fullName,
+                    email: user.email
+                };
+                const demplateData = {
+                    name: user.fullName,
+                    token: token_1.default.getVarifyEmailToken(user)
+                };
+                mailer_1.default.mailByTemplate("registered", demplateData, reciver, "Verify your email.");
                 yield user.populate("workspace").execPopulate();
                 res.status(200).json({ "access_token": accessToken, user: user.toJSON(), "refresh_token": refreshToken });
             }
@@ -165,7 +177,16 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const token = token_1.default.genertaInvitationToken({ email: req.body.email, workspace: req.body.workspace, role: req.body.role });
-                queue_1.default.dispatch("WorkspaceInvitation", { email: req.body.email, token: token });
+                // queue_1.default.dispatch("WorkspaceInvitation", { email: req.body.email, token: token });
+                const receiver = {
+                    // name: eventData.fullName,
+                    email: req.body.email
+                };
+                const templateData = {
+                    // name: eventData.fullName,
+                    token: token
+                };
+                mailer_1.default.mailByTemplate("workspaceInvitation", templateData, receiver, "You've been invited to a workspace.");
                 res.status(200).json({ message: "invitaion email send" });
             }
             catch (error) {
@@ -231,6 +252,7 @@ class UserController {
     emailVerify(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const { token } = req.body;
+            console.log(`recieved token: ${token}`);
             const payload = token_1.default.varifyEmailToken(token);
             const user = yield user_1.default.getUserById(payload.id);
             // user.assignPermissions([]);
@@ -244,7 +266,15 @@ class UserController {
                 device: req.get("user-agent"),
                 ip: req.ip,
             });
-            queue_1.default.dispatch("Wellcome", user);
+            // queue_1.default.dispatch("Wellcome", user);
+            const reciver = {
+                name: user.fullName,
+                email: user.email
+            };
+            const demplateData = {
+                name: user.fullName,
+            };
+            mailer_1.default.mailByTemplate("wellcome", demplateData, reciver, "Wellcome to Iocsnackbox");
             res.status(200).json({ "access_token": accessToken, user: user.toJSON(), "refresh_token": refreshToken });
         });
     }
@@ -335,7 +365,16 @@ class UserController {
             }
             try {
                 const user = yield user_1.default.getProfile(email);
-                queue_1.default.dispatch("PasswordReset", user);
+                // queue_1.default.dispatch("PasswordReset", user);
+                const reciver = {
+                    name: user.fullName,
+                    email: user.email
+                };
+                const templateData = {
+                    name: user.fullName,
+                    token: token_1.default.getPasswordToken(user)
+                };
+                mailer_1.default.mailByTemplate("passwordReset", templateData, reciver, "Password reset.");
                 res.status(200).json({ success: true, message: "password reset token send to your email" });
             }
             catch (error) {
