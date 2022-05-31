@@ -72,8 +72,8 @@ exports.default = {
   mailer: {
     driver: "ses", // ses, log
     ses: {
-      accessKeyId: "AKIAXY6E7AWVSFAW5QO2",
-      secretAccessKey: "BF5cBk8QHSCpvJQJ/+etMkaNg5J3JlRokKsZhYJsGze/",
+      accessKeyId: "AKIAXY6E7AWV5IQ4A3IW",
+      secretAccessKey: "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",
       region: "us-east-1",
     },
     senderEmail: "noreply@iotsnacksbox.io",

@@ -32,11 +32,17 @@
 
       <div class="col-sm-8 col-md-8">
         <div class="right-part">
-          <div class="member">
+          <div class="member d-flex justify-content-end align-items-center">
             <p>
               Already a member?
-              <span1><nuxt-link to="/login">Sign In Now!</nuxt-link></span1>
             </p>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              @click="signInNow"
+            >
+              Sign In Now!
+            </button>
           </div>
           <div class="logo1 d-md-none d-block">
             <nuxt-link to="/"
@@ -336,6 +342,11 @@ export default {
         this.$notify.error(error.response.data.message)
       }
     },
+    signInNow() {
+      this.$router.push({
+        path: '/login',
+      })
+    }
   },
 }
 </script>

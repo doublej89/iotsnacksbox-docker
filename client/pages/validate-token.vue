@@ -1,12 +1,17 @@
 <template>
-  <v-responsive>
-    <!-- <v-row v-if="loading" justify="center">
-      <v-progress-circular indeterminate color="#122e7e"></v-progress-circular>
-    </v-row> -->
-  </v-responsive>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mx-auto">
+        <div class="text-center">
+          <h2 style="padding-top: 30px">Validating...</h2>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 export default {
+  layout: 'empty',
   // data() {
   //   return {
   //     loading: true,
