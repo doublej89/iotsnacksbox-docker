@@ -3,12 +3,12 @@
     <p class="text-center">confederate</p>
     <h2 class="text-center">Trusted Partners & Clients</h2>
     <p class="text-center">The people who put their faith on us</p>
-    <div class="row d-md-flex d-none sponsor-logo" style="max-width: 100%">
+    <div class="row d-md-flex d-none sponsor-logo" style="max-width: 100%; justify-content: space-evenly;">
       <img src="/images/virtualhardwarelab.png" />
       <img src="/images/digitalbangladesh.png" />
       <img src="/images/ictd.png" />
-      <img src="/images/anttlogo.png" />
-      <img src="/images/edublocks.png" />
+      <!-- <img src="/images/anttlogo.png" />
+      <img src="/images/edublocks.png" /> -->
     </div>
     <div
       class="row d-md-none d-block sponsor-logo1 ml-2"
@@ -21,12 +21,12 @@
         <img src="/images/digitalbangladesh.png" />
       </div>
       <div class="col-12 text-center"><img src="/images/ictd.png" /></div>
-      <div class="col-12 text-center">
+      <!-- <div class="col-12 text-center">
         <img src="/images/anttlogo.png" />
       </div>
       <div class="col-12 text-center">
         <img src="/images/edublocks.png" />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
