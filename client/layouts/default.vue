@@ -83,6 +83,13 @@
                       @click="$auth.logout()"
                       >Log Out</a
                     >
+                    <nuxt-link
+                      v-if="$auth.user.role == 'admin'"
+                      class="dropdown-item"
+                      style="font-weight: normal"
+                      to="/admin"
+                      >Admin</nuxt-link
+                    >
                   </div>
                 </li>
                 <template v-else>
