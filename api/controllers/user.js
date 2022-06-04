@@ -476,6 +476,31 @@ class UserController {
             }
         });
     }
+
+    getWaitingUsers(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield user_1.default.getWaitingUsers();
+                res.status(200).json({ users });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+
+    getAllApprovedUsers(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const ruser = req.user;
+                const users = yield user_1.default.getProfile(ruser.email);
+                res.status(200).json({ users });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
     // async getAllUsers(req: Request, res: Response, next: NextFunction) {
     //   try {
     //     const users = await userService.getAllUsers();
