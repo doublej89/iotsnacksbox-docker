@@ -277,6 +277,16 @@ class UserService {
       return yield User_1.User.findOne({ _id: id });
     });
   }
+  getWaitingUsers() {
+    return __awaiter(this, void 0, void 0, function* () {
+      return yield User_1.User.find({ approved: false });
+    });
+  }
+  getApprovedUsers() {
+    return __awaiter(this, void 0, void 0, function* () {
+      return yield User_1.User.find({ approved: true, workspace: { $exists: true } });
+    });
+  }
   getUserByEmail(email) {
     return __awaiter(this, void 0, void 0, function* () {
       return yield User_1.User.findOne({ email });

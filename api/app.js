@@ -329,6 +329,9 @@ app.post("/api/auth/signup/facebook", user_1.default.authenticateFacebook);
 app.post("/api/auth/signup/github", user_1.default.authenticateGithub);
 app.post("/api/auth/signup/google", user_1.default.authenticateGoogle);
 app.post("/api/auth/signup/linkedin", user_1.default.authenticatLinkedin);
+    
+app.get("/api/admin/waiting", middlewares_1.default.authAdmin, user_1.default.getWaitingUsers);
+app.get("/api/admin/approved", middlewares_1.default.authAdmin, user_1.default.getAllApprovedUsers);
 // app.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "/login" }), (req, res) => {
 //     res.redirect(req.session.returnTo || "/");
 // });

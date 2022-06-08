@@ -29,6 +29,10 @@ const userSchema = new mongoose_1.default.Schema({
     twitter: mongoose_1.default.Schema.Types.Mixed,
     google: mongoose_1.default.Schema.Types.Mixed,
     emailVerifyAt: Date,
+    approved: {
+        type: Boolean,
+        default: false
+    },
     passwordResetAt: Date,
     firstName: String,
     lastName: String,
