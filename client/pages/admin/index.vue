@@ -59,7 +59,7 @@ export default {
             name: user.fullName,
             email: user.email,
             institute: user.institute,
-            workspace: user.workspace,
+            workspace: user.workspace ? user.workspace.name: null,
             key: uuid(),
           })
         })

@@ -23,7 +23,8 @@ class TokenService {
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
-            workspace: user.workspace ? user.workspace._id : ""
+            workspace: user.workspace ? user.workspace._id : "",
+            role: user.role,
         };
         const token = jsonwebtoken_1.default.sign(payload, config_1.default.AccessToken.secret, {
             algorithm: "HS384",

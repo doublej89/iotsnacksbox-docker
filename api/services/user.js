@@ -279,7 +279,7 @@ class UserService {
   }
   getWaitingUsers() {
     return __awaiter(this, void 0, void 0, function* () {
-      return yield User_1.User.find({ approved: false });
+      return yield User_1.User.find({ approved: false, role: { $ne: 'admin' } }).populate('workspace').exec();
     });
   }
   getApprovedUsers() {

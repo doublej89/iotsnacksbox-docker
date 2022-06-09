@@ -46,7 +46,6 @@ class Middlewares {
                     throw new error_handler_1.default(401, "Unauthorized");
                 try {
                     const decoded = jsonwebtoken_1.default.verify(token.replace("Bearer ", ""), config_1.default.AccessToken.secret, { algorithms: ["HS384"] });
-                    console.log(decoded);
                     if (decoded['role'] !== 'admin') {
                         throw new error_handler_1.default(401, "Admin authorization required!");
                     }

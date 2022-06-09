@@ -68,7 +68,7 @@
       <v-spacer></v-spacer>
 
       <!-- <v-img src="/images/flag.svg" max-width="24px" class="mr-5"></v-img> -->
-      
+
       <v-menu
         v-if="$auth.loggedIn"
         bottom
@@ -124,22 +124,6 @@
       </v-container>
     </v-main>
 
-    <v-footer color="transparent">
-      <v-row justify="center">
-        <v-col cols="12" md="8">
-          <v-card color="transparent" flat>
-            <v-card-subtitle class="pb-1">
-              Made with <v-icon dark color="#F16347">mdi-heart</v-icon> in
-              Dhaka, Bangladesh.
-            </v-card-subtitle>
-            <v-card-subtitle class="pt-1">
-              © Copyright ANTT Robotics Ltd. ANTT Robotics and the ANTT Robotics
-              logo are trademarks of ANTT Robotics Ltd.
-            </v-card-subtitle>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-footer>
     <v-dialog v-model="dialog" max-width="420">
       <v-card>
         <v-card-title class="headline text-h6 py-5"
