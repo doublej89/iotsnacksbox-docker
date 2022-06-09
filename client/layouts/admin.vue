@@ -127,7 +127,7 @@
     <v-dialog v-model="dialog" max-width="420">
       <v-card>
         <v-card-title class="headline text-h6 py-5"
-          >Request invitations to
+          >Allocate storage to
           {{ $auth.user ? $auth.user.workspace.name : null }}
         </v-card-title>
 
@@ -135,30 +135,13 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                v-model="email"
+                v-model="storage"
                 label="To:"
                 placeholder="name@gmail.com"
                 outlined
                 :rules="emailRule"
                 dense
               ></v-text-field>
-            </v-col>
-            <!-- <v-col cols="12">
-              <v-text-field
-                label="Reason for request (optional)"
-                placeholder="Add a note for your admin"
-                outlined
-                dense
-                hint="Your request will be sent to your admins, and you’ll be notified when it’s approved or denied."
-              ></v-text-field>
-            </v-col> -->
-            <v-col cols="12">
-              <v-select
-                v-model="role"
-                :items="roles"
-                label="Select a role"
-                outlined
-              ></v-select>
             </v-col>
             <v-col cols="12">
               <div class="text-right">
@@ -169,7 +152,7 @@
                   :disabled="!disableBtn"
                   @click="sendRequest"
                 >
-                  Send Request
+                  OK
                 </v-btn>
               </div>
             </v-col>
@@ -197,7 +180,7 @@ export default {
   },
   data: () => ({
     drawer: true,
-    email: '',
+    storage: '',
     roles: ['member', 'admin'],
     role: '',
     emailRule: [
@@ -237,15 +220,15 @@ export default {
       return breadcrumbs
     },
     disableBtn() {
-      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      return Boolean(this.email && pattern.test(this.email) && this.role)
+      // const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return Boolean(this.storage)
     },
     dialog: {
       get() {
-        return this.$store.getters.getWorkspaceInvitationDialog
+        return this.$store.getters.getStorageAllocationDialog
       },
       set(newVal) {
-        this.$store.commit('setWorkspaceInvitationDialog', newVal)
+        this.$store.commit('setStorageAllocationDialog', newVal)
       },
     },
   },
