@@ -493,8 +493,7 @@ class UserController {
     getAllApprovedUsers(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const ruser = req.user;
-                const users = yield user_1.default.getProfile(ruser.email);
+                const users = yield user_1.default.getApprovedUsers();
                 res.status(200).json({ users });
             }
             catch (error) {
@@ -512,6 +511,29 @@ class UserController {
                 }
                 yield User_1.User.deleteOne({ _id: userId });
                 res.status(200).json({ delete: 'success' });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    approveUser(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { userId, storage } = req.body;
+                console.log(`storage size is: ${storage} MB`)
+                if (!storage) {
+                    return res.status(401).json({ message: 'no storage space provided' }); 
+                }
+                const user = yield user_1.default.getUserById(userId);
+                if (!user.workspace) {
+                    return res.status(401).json({ message: 'user has no workspace' });
+                }
+                user.workspace.features.storage = +storage;
+                yield user.workspace.save();
+                user.approved = true;
+                yield user.save();
+                res.status(200).json({ user: user.toJSON() });
             }
             catch (error) {
                 next(error);

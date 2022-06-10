@@ -14,7 +14,7 @@
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title class="listItem-title">
-                Requests List
+                Users awaiting approval
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -23,7 +23,7 @@
             nuxt
             exact
             color="primary"
-            to="/admin/users"
+            to="/admin/approved"
             class="listItem"
           >
             <v-list-item-action class="mr-3">
@@ -31,7 +31,7 @@
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title class="listItem-title">
-                Users List
+                Approved Users List
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>

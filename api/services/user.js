@@ -274,7 +274,7 @@ class UserService {
   }
   getUserById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-      return yield User_1.User.findOne({ _id: id });
+      return yield User_1.User.findOne({ _id: id }).populate("workspace");
     });
   }
   getWaitingUsers() {
@@ -284,7 +284,7 @@ class UserService {
   }
   getApprovedUsers() {
     return __awaiter(this, void 0, void 0, function* () {
-      return yield User_1.User.find({ approved: true, workspace: { $exists: true } });
+      return yield User_1.User.find({ approved: true, workspace: { $exists: true } }).populate('workspace').exec();
     });
   }
   getUserByEmail(email) {

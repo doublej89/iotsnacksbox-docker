@@ -333,6 +333,7 @@ app.post("/api/auth/signup/linkedin", user_1.default.authenticatLinkedin);
 app.get("/api/admin/waiting", middlewares_1.default.authAdmin, user_1.default.getWaitingUsers);
 app.get("/api/admin/approved", middlewares_1.default.authAdmin, user_1.default.getAllApprovedUsers);
 app.delete("/api/admin/user/:id", middlewares_1.default.authAdmin, user_1.default.deleteUser);
+app.put("/api/admin/user/approve", middlewares_1.default.authAdmin, user_1.default.approveUser);
 // app.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "/login" }), (req, res) => {
 //     res.redirect(req.session.returnTo || "/");
 // });
