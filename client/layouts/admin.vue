@@ -123,44 +123,7 @@
         <nuxt />
       </v-container>
     </v-main>
-
-    <v-dialog v-model="dialog" max-width="420">
-      <v-card>
-        <v-card-title class="headline text-h6 py-5"
-          >Allocate storage to
-          {{ $auth.user ? $auth.user.workspace.name : null }}
-        </v-card-title>
-
-        <v-card-text>
-          <v-row>
-            <v-col cols="12">
-              <v-text-field
-                v-model="storage"
-                label="To:"
-                placeholder="name@gmail.com"
-                outlined
-                :rules="emailRule"
-                dense
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <div class="text-right">
-                <v-btn
-                  depressed
-                  color="#eee"
-                  class="rounded-md"
-                  :disabled="!disableBtn"
-                  @click="sendRequest"
-                >
-                  OK
-                </v-btn>
-              </div>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <Confirm ref="confirm"/>
+    <Confirm ref="confirm" />
   </v-app>
 </template>
 <script>
@@ -171,7 +134,7 @@ export default {
   components: { Snackbar, Confirm },
   middleware: 'auth',
   async fetch() {
-    if (!this.$auth.loggedIn || this.$auth.user.role !== "admin") {
+    if (!this.$auth.loggedIn || this.$auth.user.role !== 'admin') {
       this.$router.push({
         path: '/',
       })
@@ -196,7 +159,7 @@ export default {
     workspaces: [],
   }),
   mounted() {
-    if (!this.$auth.loggedIn || this.$auth.user.role !== "admin") {
+    if (!this.$auth.loggedIn || this.$auth.user.role !== 'admin') {
       this.$router.push({
         path: '/',
       })
@@ -264,23 +227,6 @@ export default {
         }
         this.dialog = false
       }
-    },
-    switchWorkspace(workspace) {
-      this.$axios
-        .post('/auth/switch-workspace', {
-          workspace,
-        })
-        .then((res) => {
-          this.$auth
-            .setUserToken(res.data.access_token, res.data.refresh_token)
-            .then(() => {
-              this.$auth.setUser(res.data.user)
-              window.location.reload()
-            })
-        })
-        .catch((err) => {
-          this.$notify.error(err.response.data.message)
-        })
     },
   },
 }

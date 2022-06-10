@@ -33,10 +33,7 @@
                   @click="dialog = true"
                   >Invite People</v-btn
                 > -->
-                <v-dialog
-                  v-model="dialog"
-                  max-width="500px"
-                >
+                <v-dialog v-model="dialog" max-width="500px">
                   <v-card>
                     <v-card-title>
                       <span class="text-h5">Allocate storage</span>
@@ -57,7 +54,8 @@
                               dense
                             ></v-text-field>
                             <v-card-text v-else>
-                              Cannot allocate storage to a user without a workspace
+                              Cannot allocate storage to a user without a
+                              workspace
                             </v-card-text>
                           </v-col>
                         </v-row>
@@ -66,16 +64,13 @@
 
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn
-                        color="blue darken-1"
-                        text
-                        @click="close"
-                      >
+                      <v-btn color="blue darken-1" text @click="close">
                         Cancel
                       </v-btn>
                       <v-btn
                         color="blue darken-1"
                         text
+                        :disabled="!storage"
                         @click="save"
                       >
                         Ok
@@ -85,11 +80,20 @@
                 </v-dialog>
                 <v-dialog v-model="dialogDelete" max-width="500px">
                   <v-card>
-                    <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+                    <v-card-title class="text-h5"
+                      >Are you sure you want to delete this item?</v-card-title
+                    >
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                      <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                      <v-btn color="blue darken-1" text @click="closeDelete"
+                        >Cancel</v-btn
+                      >
+                      <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="deleteItemConfirm"
+                        >OK</v-btn
+                      >
                       <v-spacer></v-spacer>
                     </v-card-actions>
                   </v-card>
@@ -97,19 +101,10 @@
               </v-toolbar>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-icon
-                small
-                class="mr-2"
-                @click="editItem(item)"
-              >
+              <v-icon small class="mr-2" @click="editItem(item)">
                 mdi-pencil
               </v-icon>
-              <v-icon
-                small
-                @click="deleteItem(item)"
-              >
-                mdi-delete
-              </v-icon>
+              <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
             </template>
           </v-data-table>
         </v-col>
@@ -132,7 +127,7 @@ export default {
             name: user.fullName,
             email: user.email,
             institute: user.institute,
-            workspace: user.workspace ? user.workspace.name: null,
+            workspace: user.workspace ? user.workspace.name : null,
             key: uuid(),
           })
         })
@@ -171,44 +166,80 @@ export default {
     },
   }),
   methods: {
-    deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
-      },
+    deleteItem(item) {
+      this.editedIndex = this.desserts.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
+    },
 
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
+    deleteItemConfirm() {
+      if (this.editedItem.id) {
+        this.$axios
+          .delete(`/admin/user/${this.editedItem.id}`)
+          .then((res) => {
+            console.log(res.data)
+            this.desserts.splice(this.editedIndex, 1)
+            this.closeDelete()
+          })
+          .catch((error) => {
+            this.closeDelete()
+            this.$notify.error(error.response.data.message)
+          })
+      } else {
         this.closeDelete()
-      },
-      editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialog = true
-      },
+        this.$notify.error('user id is missing!')
+      }
+    },
+    editItem(item) {
+      this.editedIndex = this.desserts.indexOf(item)
+      this.editedItem = { ...item }
+      this.dialog = true
+    },
 
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-          this.storage = ''
-        })
-      },
-      save () {
-        console.log(storage)
-        console.log(this.desserts[this.editedIndex].workspace.name)
+    close() {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign(
+          {},
+          {
+            id: '',
+            name: '',
+            email: '',
+            institute: '',
+            workspace: null,
+            key: '',
+          }
+        )
+        this.editedIndex = -1
+        this.storage = ''
+      })
+    },
+    save() {
+      console.log(this.storage)
+      console.log(this.desserts[this.editedIndex].workspace)
+      console.log(this.desserts[this.editedIndex].email)
+      console.log(this.desserts[this.editedIndex])
 
-        this.close()
-      },
+      this.close()
+    },
 
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
+    closeDelete() {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign(
+          {},
+          {
+            id: '',
+            name: '',
+            email: '',
+            institute: '',
+            workspace: null,
+            key: '',
+          }
+        )
+        this.editedIndex = -1
+      })
+    },
   },
   layout: 'admin',
 }

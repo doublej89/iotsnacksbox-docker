@@ -22,6 +22,7 @@ const auth_1 = __importDefault(require("../services/auth"));
 const aws_sdk_1 = __importDefault(require("aws-sdk"));
 const config_1 = __importDefault(require("../config"));
 const mailer_1 = __importDefault(require("../mailer/mailer"));
+const User_1 = require("../models/User");
 
 class UserController {
     validate(method) {
@@ -495,6 +496,22 @@ class UserController {
                 const ruser = req.user;
                 const users = yield user_1.default.getProfile(ruser.email);
                 res.status(200).json({ users });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    deleteUser(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = req.params.id;
+                const user = yield user_1.default.getUserById(userId);
+                if (user.workspace) {
+                    yield workspace_1.default.deleteMemberByWorkspaceId(user.workspace, userId);
+                }
+                yield User_1.User.deleteOne({ _id: userId });
+                res.status(200).json({ delete: 'success' });
             }
             catch (error) {
                 next(error);

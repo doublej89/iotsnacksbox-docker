@@ -59,6 +59,12 @@ class WorkspaceService {
             return ws;
         });
     }
+    deleteMemberByWorkspaceId(wsId, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const ws = yield Workspace_1.Workspace.updateOne({ _id: wsId }, { $pull: { users: { user: userId } } });
+            return ws;
+        });
+    }
     userWorkspaces(userId, select = []) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Workspace_1.Workspace.find({ "users.user": userId }, select);
