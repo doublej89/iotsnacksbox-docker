@@ -33,6 +33,11 @@ class WorkspaceService {
             return yield Workspace_1.Workspace.findOne({ slug });
         });
     }
+    getWorkspaceById(wsId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Workspace_1.Workspace.findOne({ _id: wsId });
+        });
+    }
     getMembers(workspace) {
         return __awaiter(this, void 0, void 0, function* () {
             const ws = yield Workspace_1.Workspace.findById(workspace).populate("users.user");
@@ -56,6 +61,12 @@ class WorkspaceService {
         return __awaiter(this, void 0, void 0, function* () {
             const slug = lodash_1.kebabCase(name);
             const ws = yield Workspace_1.Workspace.updateOne({ slug }, { $pull: { users: { user: userId } } });
+            return ws;
+        });
+    }
+    deleteMemberByWorkspaceId(wsId, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const ws = yield Workspace_1.Workspace.updateOne({ _id: wsId }, { $pull: { users: { user: userId } } });
             return ws;
         });
     }

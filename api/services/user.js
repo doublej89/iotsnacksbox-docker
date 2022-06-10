@@ -250,7 +250,17 @@ class UserService {
   }
   getUserById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-      return yield User_1.User.findOne({ _id: id });
+      return yield User_1.User.findOne({ _id: id }).populate("workspace");
+    });
+  }
+  getWaitingUsers() {
+    return __awaiter(this, void 0, void 0, function* () {
+      return yield User_1.User.find({ approved: false, role: { $ne: 'admin' } }).populate('workspace').exec();
+    });
+  }
+  getApprovedUsers() {
+    return __awaiter(this, void 0, void 0, function* () {
+      return yield User_1.User.find({ approved: true, workspace: { $exists: true } }).populate('workspace').exec();
     });
   }
   getUserByEmail(email) {

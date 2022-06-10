@@ -38,6 +38,30 @@ class Middlewares {
             }
         });
     }
+    authAdmin(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const token = req.get("Authorization");
+                if (!token)
+                    throw new error_handler_1.default(401, "Unauthorized");
+                try {
+                    const decoded = jsonwebtoken_1.default.verify(token.replace("Bearer ", ""), config_1.default.AccessToken.secret, { algorithms: ["HS384"] });
+                    if (decoded['role'] !== 'admin') {
+                        throw new error_handler_1.default(401, "Admin authorization required!");
+                    }
+                    req.user = decoded;
+                    auth_1.default.setUser(decoded);
+                    next();
+                }
+                catch (err) {
+                    throw new error_handler_1.default(401, err);
+                }
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
     jsonSyntax(err, req, res, next) {
         if (err.name === "SyntaxError") {
             return res.status(400).json({ message: "The json data you're trying to send is invalid", desc: err.message });

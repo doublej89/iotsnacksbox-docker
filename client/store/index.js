@@ -12,12 +12,16 @@ export const state = () => ({
     state: 'confirm',
   },
   worksapceInvitationDialog: false,
+  storageAllocationDialog: false,
 })
 
 export const getters = {
   getWorkspaceInvitationDialog(state) {
     return state.worksapceInvitationDialog
   },
+  getStorageAllocationDialog(state) {
+    return state.storageAllocationDialog
+  }
 }
 
 export const mutations = {
@@ -85,6 +89,9 @@ export const mutations = {
   },
   setWorkspaceInvitationDialog(state, payload) {
     state.worksapceInvitationDialog = payload
+  },
+  setStorageAllocationDialog(state, payload) {
+    state.storageAllocationDialog = payload
   },
 }
 
