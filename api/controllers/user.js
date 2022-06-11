@@ -521,7 +521,6 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { userId, storage } = req.body;
-                console.log(`storage size is: ${storage} MB`)
                 if (!storage) {
                     return res.status(401).json({ message: 'no storage space provided' }); 
                 }
