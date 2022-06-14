@@ -539,6 +539,20 @@ class UserController {
             }
         });
     }
+    disapproveUser(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { userId } = req.body;
+                const user = yield user_1.default.getUserById(userId);
+                user.approved = false;
+                yield user.save();
+                res.status(200).json({ user: user.toJSON() });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
     // async getAllUsers(req: Request, res: Response, next: NextFunction) {
     //   try {
     //     const users = await userService.getAllUsers();

@@ -334,6 +334,7 @@ app.get("/api/admin/waiting", middlewares_1.default.authAdmin, user_1.default.ge
 app.get("/api/admin/approved", middlewares_1.default.authAdmin, user_1.default.getAllApprovedUsers);
 app.delete("/api/admin/user/:id", middlewares_1.default.authAdmin, user_1.default.deleteUser);
 app.put("/api/admin/user/approve", middlewares_1.default.authAdmin, user_1.default.approveUser);
+app.put("/api/admin/user/disapprove", middlewares_1.default.authAdmin, user_1.default.disapproveUser);
 // app.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "/login" }), (req, res) => {
 //     res.redirect(req.session.returnTo || "/");
 // });

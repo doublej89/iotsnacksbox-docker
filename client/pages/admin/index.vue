@@ -142,6 +142,7 @@ export default {
       email: '',
       institute: '',
       workspace: null,
+      storage: null,
       key: '',
     },
   }),
@@ -158,6 +159,7 @@ export default {
               email: user.email,
               institute: user.institute,
               workspace: user.workspace ? user.workspace.name : null,
+              storage: user.workspace ? user.workspace.features.storage : null,
               key: uuid(),
             })
           })
@@ -178,7 +180,7 @@ export default {
           .delete(`/admin/user/${this.editedItem.id}`)
           .then((res) => {
             console.log(res.data)
-            this.desserts.filter(user => user.id !== this.editedItem.id)
+            this.desserts = this.desserts.filter(user => user.id !== this.editedItem.id)
             this.closeDelete()
           })
           .catch((error) => {
@@ -193,6 +195,9 @@ export default {
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item)
       this.editedItem = { ...item }
+      if (this.editedItem.workspace) {
+        this.storage = this.editedItem.storage
+      }
       this.dialog = true
     },
 
@@ -221,9 +226,10 @@ export default {
       }
       this.$axios.put('/admin/user/approve', params).then((responce) => {
         console.log(responce.data.user)
-
+        if (responce.data.user) {
+          this.initialize()
+        }
         this.close()
-        this.initialize()
       })
       .catch((error) => {
         this.close()
