@@ -66,7 +66,7 @@
           <div class="col-6">
             <img
               class="mt-4"
-              src="/images/tollcollection.png"
+              src="/images/smart_parking.jpg"
               style="max-width: 100%"
             />
           </div>
