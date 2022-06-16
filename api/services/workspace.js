@@ -90,6 +90,17 @@ class WorkspaceService {
             }
         });
     }
+    getAllWorkspaces() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // const ws = await Workspace.findById(workspace);
+                return Workspace_1.Workspace.find({}).lean().populate("users.user").cursor();
+            }
+            catch (error) {
+                throw new Error("Can not fetch all workspaces");
+            }
+        });
+    }
     isUserInWorkspace(workspace, user) {
         const index = workspace.users.findIndex((u) => u.user.toString() === user.toString());
         return index !== -1;

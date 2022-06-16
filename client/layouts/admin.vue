@@ -35,6 +35,22 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item
+            nuxt
+            exact
+            color="primary"
+            to="/admin/workspaces"
+            class="listItem"
+          >
+            <v-list-item-action class="mr-3">
+              <span class="icon-registercomponent"></span>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title class="listItem-title">
+                Workspaces
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-sheet>
     </v-navigation-drawer>

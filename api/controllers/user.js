@@ -521,7 +521,6 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { userId, storage } = req.body;
-                console.log(`storage size is: ${storage} MB`)
                 if (!storage) {
                     return res.status(401).json({ message: 'no storage space provided' }); 
                 }
@@ -532,6 +531,20 @@ class UserController {
                 user.workspace.features.storage = +storage;
                 yield user.workspace.save();
                 user.approved = true;
+                yield user.save();
+                res.status(200).json({ user: user.toJSON() });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    disapproveUser(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { userId } = req.body;
+                const user = yield user_1.default.getUserById(userId);
+                user.approved = false;
                 yield user.save();
                 res.status(200).json({ user: user.toJSON() });
             }

@@ -142,6 +142,7 @@ export default {
       email: '',
       institute: '',
       workspace: null,
+      storage: null,
       key: '',
     },
   }),
@@ -150,7 +151,6 @@ export default {
       const members = []
       try {
         const response = await this.$axios.get('/admin/waiting')
-        console.log(response.data)
         if (response.data.users.length > 0) {
           response.data.users.forEach((user) => {
             members.push({
@@ -159,11 +159,11 @@ export default {
               email: user.email,
               institute: user.institute,
               workspace: user.workspace ? user.workspace.name : null,
+              storage: user.workspace ? user.workspace.features.storage : null,
               key: uuid(),
             })
           })
         }
-        // return { desserts }
         this.desserts = members
       } catch (error) {
         this.$notify.error(error.response.data.message)
@@ -180,7 +180,7 @@ export default {
           .delete(`/admin/user/${this.editedItem.id}`)
           .then((res) => {
             console.log(res.data)
-            this.desserts.splice(this.editedIndex, 1)
+            this.desserts = this.desserts.filter(user => user.id !== this.editedItem.id)
             this.closeDelete()
           })
           .catch((error) => {
@@ -195,6 +195,9 @@ export default {
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item)
       this.editedItem = { ...item }
+      if (this.editedItem.workspace) {
+        this.storage = this.editedItem.storage
+      }
       this.dialog = true
     },
 
@@ -218,14 +221,15 @@ export default {
     },
     save() {
       const params = {
-        userId: this.desserts[this.editedIndex].id,
+        userId: this.editedItem.id,
         storage: this.storage,
       }
       this.$axios.put('/admin/user/approve', params).then((responce) => {
         console.log(responce.data.user)
-
+        if (responce.data.user) {
+          this.initialize()
+        }
         this.close()
-        this.initialize()
       })
       .catch((error) => {
         this.close()

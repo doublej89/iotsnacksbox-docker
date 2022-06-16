@@ -25,15 +25,30 @@
                   dense
                 ></v-text-field>
                 <v-spacer></v-spacer>
-                <!-- <v-btn
-                  color="primary"
-                  small
-                  dark
-                  class="mb-2"
-                  @click="dialog = true"
-                  >Invite People</v-btn
-                > -->
+                <v-dialog v-model="dialogRemoveApproval" max-width="500px">
+                  <v-card>
+                    <v-card-title class="text-h5"
+                      >Are you sure you want to withdraw approval for this user?</v-card-title
+                    >
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="blue darken-1" text @click="closeRemoveApproval"
+                        >Cancel</v-btn
+                      >
+                      <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="removeApprovalConfirm"
+                        >OK</v-btn
+                      >
+                      <v-spacer></v-spacer>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </v-toolbar>
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <v-icon color="red" @click="removeApproval(item)"> mdi-close </v-icon>
             </template>
           </v-data-table>
         </v-col>
@@ -44,35 +59,11 @@
 <script>
 import { v4 as uuid } from 'uuid'
 export default {
-  async created() {
-    const members = []
-    try {
-      const response = await this.$axios.get('/admin/approved')
-      console.log(response.data)
-      if (response.data.users.length > 0) {
-        response.data.users.forEach((user) => {
-          members.push({
-            id: user._id,
-            name: user.fullName,
-            email: user.email,
-            institute: user.institute,
-            workspace: user.workspace ? user.workspace.name : null,
-            storage : user.workspace ? `${user.workspace.features.storage} MB` : null,
-            key: uuid(),
-          })
-        })
-      }
-      // return { desserts }
-      this.desserts = members
-    } catch (error) {
-      this.$notify.error(error.response.data.message)
-    }
+  created() {
+    this.initialize()
   },
   data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    search: '',
-    storage: '',
+    dialogRemoveApproval: false,
     headers: [
       {
         text: 'Name',
@@ -83,9 +74,9 @@ export default {
       { text: 'Workspace', value: 'workspace' },
       { text: 'Institute', value: 'institute' },
       { text: 'Storage', value: 'storage' },
+      { text: 'Withdraw Approval', value: 'actions', sortable: false },
     ],
     desserts: [],
-    editedIndex: -1,
     editedItem: {
       id: '',
       name: '',
@@ -96,72 +87,48 @@ export default {
     },
   }),
   methods: {
-    deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item)
+    async initialize() {
+      const members = []
+      try {
+        const response = await this.$axios.get('/admin/approved')
+
+        if (response.data.users.length > 0) {
+          response.data.users.forEach((user) => {
+            members.push({
+              id: user._id,
+              name: user.fullName,
+              email: user.email,
+              institute: user.institute,
+              workspace: user.workspace ? user.workspace.name : null,
+              storage : user.workspace ? `${user.workspace.features.storage} MB` : null,
+              key: uuid(),
+            })
+          })
+        }
+        this.desserts = members
+      } catch (error) {
+        this.$notify.error(error.response.data.message)
+      }
+    },
+    removeApproval(item) {
       this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
+      this.dialogRemoveApproval = true
     },
-
-    deleteItemConfirm() {
-      if (this.editedItem.id) {
-        this.$axios
-          .delete(`/admin/user/${this.editedItem.id}`)
-          .then((res) => {
-            console.log(res.data)
-            this.desserts.splice(this.editedIndex, 1)
-            this.closeDelete()
-          })
-          .catch((error) => {
-            this.closeDelete()
-            this.$notify.error(error.response.data.message)
-          })
-      } else {
-        this.closeDelete()
-        this.$notify.error('user id is missing!')
-      }
-    },
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item)
-      this.editedItem = { ...item }
-      this.dialog = true
-    },
-
-    close() {
-      this.dialog = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign(
-          {},
-          {
-            id: '',
-            name: '',
-            email: '',
-            institute: '',
-            workspace: null,
-            key: '',
-          }
-        )
-        this.editedIndex = -1
-        this.storage = ''
-      })
-    },
-    save() {
-      const params = {
-        userId: this.desserts[this.editedIndex].id,
-        storage: this.storage,
-      }
-      this.$axios.put('/admin/user/approve', params).then((responce) => {
-        console.log(responce.data.user)
-
-        this.close()
+    removeApprovalConfirm() {
+      const params = { userId: this.editedItem.id }
+      this.$axios.put('/admin/user/disapprove', params).then((responce) => {
+        if (responce.data.user) {
+          this.initialize()
+        }
+        this.closeRemoveApproval()
       })
       .catch((error) => {
-        this.close()
+        this.closeRemoveApproval()
         this.$notify.error(error.response.data.message)
       })
     },
-
-    closeDelete() {
-      this.dialogDelete = false
+    closeRemoveApproval() {
+      this.dialogRemoveApproval = false
       this.$nextTick(() => {
         this.editedItem = Object.assign(
           {},
@@ -174,7 +141,6 @@ export default {
             key: '',
           }
         )
-        this.editedIndex = -1
       })
     },
   },
