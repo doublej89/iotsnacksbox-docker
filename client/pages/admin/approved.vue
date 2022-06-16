@@ -115,12 +115,8 @@ export default {
       this.dialogRemoveApproval = true
     },
     removeApprovalConfirm() {
-      const params = {
-        userId: this.editedItem.id,
-        storage: this.storage,
-      }
+      const params = { userId: this.editedItem.id }
       this.$axios.put('/admin/user/disapprove', params).then((responce) => {
-        console.log(responce.data.user)
         if (responce.data.user) {
           this.initialize()
         }

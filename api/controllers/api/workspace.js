@@ -16,6 +16,8 @@ const workspace_1 = __importDefault(require("../../services/workspace"));
 const auth_1 = __importDefault(require("../../services/auth"));
 const token_1 = __importDefault(require("../../services/token"));
 const error_handler_1 = __importDefault(require("../../config/error-handler"));
+const Workspace_1 = require("../../models/Workspace");
+
 class WorkspaceController {
     // validate (method: string): RequestHandler {
     //     let rules: Array<any> = [];
@@ -39,6 +41,18 @@ class WorkspaceController {
             try {
                 const ws = yield workspace_1.default.userWorkspaces(auth_1.default.id(), ["name", "slug"]);
                 res.json(ws);
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    getAllWorkspaces(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // const ws = await Workspace.findById(workspace);
+                const workspaces = yield Workspace_1.Workspace.find({}).populate("users.user");
+                res.status(200).json({ workspaces });
             }
             catch (error) {
                 next(error);
@@ -88,6 +102,21 @@ class WorkspaceController {
                     });
                     res.status(200).json({ "access_token": accessToken, user: user.toJSON(), "refresh_token": refreshToken });
                 }
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    updateWorkspace(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { workspace, storage, requestsPerMonth } = req.body;
+                const ws = yield workspace_1.default.getWorkspace(workspace);
+                if (storage) ws.features.storage = +storage;
+                if (requestsPerMonth) ws.features.requestPerMonth = +requestsPerMonth;
+                const updatedWs = yield ws.save();
+                res.status(200).json({ workspace: updatedWs.toJSON() });
             }
             catch (error) {
                 next(error);

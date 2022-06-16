@@ -76,19 +76,19 @@ const monthly_subscription_check_1 = __importDefault(
 const snacksbox_seed_1 = __importDefault(require("./seed/snacksbox-seed"));
 // Create Express server
 const app = express_1.default();
-const job = new cron_1.CronJob(
-  "1 0 0-23 * * *",
-  hourly_workspace_capacity_check_1.default
-);
-job.start();
-console.log("cron job started");
-const dailyJob = new cron_1.CronJob(
-  "1 0 1-31 * *",
-  monthly_subscription_check_1.default
-);
-// const dailyJob = new CronJob("*/3 * * * *", monthlySubscriptionCheck);
-dailyJob.start();
-console.log("subscription check job started");
+// const job = new cron_1.CronJob(
+//   "1 0 0-23 * * *",
+//   hourly_workspace_capacity_check_1.default
+// );
+// job.start();
+// console.log("cron job started");
+// const dailyJob = new cron_1.CronJob(
+//   "1 0 1-31 * *",
+//   monthly_subscription_check_1.default
+// );
+// // const dailyJob = new CronJob("*/3 * * * *", monthlySubscriptionCheck);
+// dailyJob.start();
+// console.log("subscription check job started");
 // Connect to MongoDB
 mongoose_1.default.Promise = bluebird_1.default;
 mongoose_1.default
@@ -335,6 +335,8 @@ app.get("/api/admin/approved", middlewares_1.default.authAdmin, user_1.default.g
 app.delete("/api/admin/user/:id", middlewares_1.default.authAdmin, user_1.default.deleteUser);
 app.put("/api/admin/user/approve", middlewares_1.default.authAdmin, user_1.default.approveUser);
 app.put("/api/admin/user/disapprove", middlewares_1.default.authAdmin, user_1.default.disapproveUser);
+app.get("/api/admin/workspace", middlewares_1.default.authAdmin, workspace_1.default.getAllWorkspaces);
+app.put("/api/admin/workspace", middlewares_1.default.authAdmin, workspace_1.default.updateWorkspace);
 // app.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "/login" }), (req, res) => {
 //     res.redirect(req.session.returnTo || "/");
 // });
