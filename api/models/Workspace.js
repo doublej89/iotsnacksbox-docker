@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Workspace = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+const mongoosePaginate = require('mongoose-paginate-v2');
 const resourceuser_1 = __importDefault(require("./plugins/resourceuser"));
 const auth_1 = __importDefault(require("../services/auth"));
 // type addUserFuncton = (user: mongoose.Types.ObjectId, role: string) => void
@@ -99,6 +100,7 @@ const WorkspaceSchema = new mongoose_1.default.Schema({
     products: Array,
 });
 WorkspaceSchema.plugin(resourceuser_1.default);
+WorkspaceSchema.plugin(mongoosePaginate);
 // WorkspaceSchema.methods.addUser = async function (user: mongoose.Types.ObjectId, role: string) {
 //     role = role || "member";
 //     this.set("users", {$push : {users: {user, role}}});

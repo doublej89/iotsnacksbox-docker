@@ -100,10 +100,14 @@ export default {
       users: 0,
       key: '',
     },
+    loading: true,
+    options: {},
   }),
   methods: {
     async initialize() {
       const workspaces = []
+      this.loading = true
+      const { page, itemsPerPage } = this.options
       try {
         const response = await this.$axios.get('/admin/workspace')
 

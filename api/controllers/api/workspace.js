@@ -50,9 +50,18 @@ class WorkspaceController {
     getAllWorkspaces(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // const ws = await Workspace.findById(workspace);
-                const workspaces = yield Workspace_1.Workspace.find({}).populate("users.user");
-                res.status(200).json({ workspaces });
+                const { page, size } = req.query;
+                const limit = size ? +size : 10;
+                const offset = page ? page * limit : 0;
+                
+                // const workspaces = yield Workspace_1.Workspace.find({}).populate("users.user");
+                const data = yield Workspace_1.Workspace.paginate({}, { offset, limit });
+                res.status(200).json({ 
+                    totalItems: data.totalDocs,
+                    workspaces: data.docs,
+                    totalPages: data.totalPages,
+                    currentPage: data.page - 1, 
+                });
             }
             catch (error) {
                 next(error);
