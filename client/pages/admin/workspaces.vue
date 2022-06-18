@@ -6,7 +6,9 @@
           <v-data-table
             :headers="headers"
             :items="desserts"
-            :items-per-page="10"
+            :options.sync="options"
+            :server-items-length="totalDesserts"
+            :loading="loading"
             class="elevation-1"
             item-key="key"
           >
@@ -101,15 +103,24 @@ export default {
       key: '',
     },
     loading: true,
+    totalDesserts: 0,
     options: {},
   }),
+  watch: {
+      options: {
+        handler () {
+          this.initialize()
+        },
+        deep: true,
+      },
+  },
   methods: {
     async initialize() {
       const workspaces = []
       this.loading = true
       const { page, itemsPerPage } = this.options
       try {
-        const response = await this.$axios.get('/admin/workspace')
+        const response = await this.$axios.get(`/admin/workspace?page=${page}&size=${itemsPerPage}`)
 
         if (response.data.workspaces.length > 0) {
           response.data.workspaces.forEach((workspace) => {
@@ -126,7 +137,10 @@ export default {
           })
         }
         this.desserts = workspaces
+        this.loading = false
+        this.totalDesserts = response.data.totalItems
       } catch (error) {
+        this.loading = false
         this.$notify.error(error.response.data.message)
       }
     },
